@@ -2,7 +2,7 @@
 //  FilterViewController.m
 //  MathSolver
 //
-//  Created by B Ayres on 10/28/16.
+//  Created by D Ayres on 10/28/16.
 //  Copyright © 2016 PredawnLabs. All rights reserved.
 //
 
@@ -27,7 +27,6 @@
     CGColorSpaceRef colourSpace = CGImageGetColorSpace(self.CGImage);
     NSLog(@"Color space = %@",colourSpace);
     NSLog(@"Image width and height = %d and %d and length of image as received in neg image = %lu",width,height,[UIImagePNGRepresentation(self) length]);
-    //CGColorSpaceCreateDeviceRGB();
     unsigned char *memoryPool = (unsigned char *)calloc(width*height*4, 1);
     CGContextRef context = CGBitmapContextCreate(memoryPool, width, height, 8, width * 4, colourSpace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast);
     CGColorSpaceRelease(colourSpace);
@@ -121,10 +120,7 @@
     [confirmButton setTitle:@"Use Photo"
                         forState:UIControlStateNormal];
     
-    //if (!self.capturedImage.isNormalized) {
-    //    confirmButton.enabled = NO;
-    //}
-    
+
     [self.view addSubview:confirmButton];
     [confirmButton mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(self.view);
@@ -149,7 +145,6 @@
     
     
     imageSlider = [[UISlider alloc] initWithFrame:CGRectMake(25.0, mainScreenFrame.size.height - 80.0, mainScreenFrame.size.width - 50.0, 40.0)];
-    //[imageSlider addTarget:self action:@selector(updateSliderValue:) forControlEvents:UIControlEventValueChanged];
     [imageSlider addTarget:self action:@selector(sliderDidMove:) forControlEvents:UIControlEventValueChanged];
     
     imageSlider.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -164,16 +159,13 @@
     
     
     [self updateView];
-//    [self setupDisplayFiltering];
-    //[self setupImageResampling];
-    //[self setupImageFilteringToDisk];
+
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
+
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -198,10 +190,6 @@
 - (IBAction)sliderDidMove:(UISlider *)sender {
     blurRadius = 10 * sender.value;
     NSLog(@"Blur radius = %f",blurRadius);
-    //CGFloat smaller = blurRadius - fmodf(blurRadius, BLUR_STEP);
-    //[self asyncGenerateImageWithBlurAmount:smaller];
-    //CGFloat larger = smaller + BLUR_STEP;
-    //[self asyncGenerateImageWithBlurAmount:larger];
     [self asyncGenerateImageWithBlurAmount:blurRadius];
     [sourcePicture processImage];
 }
@@ -247,7 +235,6 @@
         CGImageRef imageRef = im.CGImage;
         int height   = (int) CGImageGetHeight(imageRef);
         int width   = (int) CGImageGetWidth(imageRef);
-        //outputBytes = (GLubyte *)malloc(width * height * 4);
         
         int bitsPerComponent = (int)CGImageGetBitsPerComponent(imageRef);
         int bitsPerPixel = 32;
@@ -258,7 +245,7 @@
         if (self.ubyte_image_store != NULL) {
             free(self.ubyte_image_store);
         }
-        //unsigned char *image_store = NULL; //calloc(im.size.width*im.size.height*4,1) ;
+    
         self.ubyte_image_store = malloc((int)im.size.width*(int)im.size.height); //,1);
     
         if (strlen((char*)self.ubyte_image_store) == 0) {
@@ -267,7 +254,7 @@
         CGColorSpaceRef colorSpaceRef = CGImageGetColorSpace(imageRef);
         
         CGBitmapInfo bitMapInfo = kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipFirst;
-        //CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
+    
         
         
         NSLog(@"image width = %d, image height=%d, bitmapinfo = %d , colorspace = %@, bytesperrow = %d, bitpercomponent=%d, kCGImageAlphaNoneSkipLast =%d and  kCGBitmapByteOrder32Big %d and kCGBitmapByteOrder32Big = %d, and kCGImageAlphaNoneSkipFirst=%d and kCGImageAlphaPremultipliedFirst=%d, and kCGImageAlphaPremultipliedLast=%d, kCGImageAlphaOnly=%d,kCGImageAlphaNone=%d and scalefactor = 5f",width,height,bitMapInfo,colorSpaceRef,bytesPerRow,bitsPerComponent,kCGImageAlphaNoneSkipLast , kCGBitmapByteOrder32Big, kCGBitmapByteOrder32Big,kCGImageAlphaNoneSkipFirst,kCGImageAlphaPremultipliedFirst,kCGImageAlphaPremultipliedLast,kCGImageAlphaOnly,kCGImageAlphaNone,scaleFactor);
@@ -307,8 +294,7 @@
                 if(linePointer[3])
                 {
                     r = linePointer[2] * 255 / linePointer[3];
-                    //                g = linePointer[1] * 255 / linePointer[3];
-                    //                b = linePointer[0] * 255 / linePointer[3];
+
                     self.ubyte_image_store[y* width+x] = r ;
                 }
             }
@@ -334,94 +320,33 @@
     
     
    
-    //[blurFilter addTarget:imageView];//what's this , is this in the right place, but it works !
 
-   /* UIImage* grayIm ;
-    
-    if (flag) {
-        grayIm = [self grayImage:sourceImage];
-    }else {
-        grayIm = sourceImage;
-    }
-    */
     // pass the image through a brightness filter to darken a bit and a gaussianBlur filter to blur
     GPUImagePicture *stillImageSource = [[GPUImagePicture alloc] initWithImage:sourceImage];
     
     
     blurFilter.blurRadiusInPixels = gaussianBlurRadius; //initialized to 1
     blurFilter.blurPasses = 1;
-    //[blurFilter addTarget:stillImageSource];
-    //[stillImageSource addTarget:blurFilter];
+
     
     blurAdaptiveFilter.blurRadiusInPixels = blurRadius;
-   // [blurFilter addTarget:blurAdaptiveFilter];
-    
-   // [blurFilter addTarget:imageInvertFilter];
-   // [stillImageSource addTarget:grayImageFilter];
+
     
     
     [stillImageSource addTarget:blurFilter];
-   // [grayImageFilter addTarget:blurFilter];
-//    [stillImageSource addTarget:blurFilter];
+
     [blurFilter addTarget:blurAdaptiveFilter];
     [blurAdaptiveFilter addTarget:imageInvertFilter];
     [imageInvertFilter addTarget:grayImageFilter];
   
-//    opacityFilter.opacity = 0;
-//    [imageInvertFilter addTarget:opacityFilter];
-    
-//    [opacityFilter addTarget:imageView];
-    //[monoFilter addTarget:imageView];
-   
-    
-    /* everything rawdataOutput related -- not in use
-    //rawdataoutput
-    [grayImageFilter addTarget:rawDataOutput];
-    
-    __unsafe_unretained GPUImageRawDataOutput * weakOutput = rawDataOutput;
-    [rawDataOutput setNewFrameAvailableBlock:^{
-        [weakOutput lockFramebufferForReading];
-        outputBytes = [weakOutput rawBytesForImage];
-        bytesPerRow = [weakOutput bytesPerRowInOutput];
-        self.rawData = [NSData dataWithBytes:outputBytes length:sourceImage.size.height*bytesPerRow];
-        NSLog(@"Bytes per row: %ld", (unsigned long)bytesPerRow);
-        for (unsigned int yIndex = 0; yIndex < 10; yIndex++)
-        {
-            for (unsigned int xIndex = 0; xIndex < 10; xIndex++)
-            {
-                NSLog(@"Byte at (%d, %d): %d, %d, %d, %d", xIndex, yIndex, outputBytes[yIndex * bytesPerRow + xIndex * 4], outputBytes[yIndex * bytesPerRow + xIndex * 4 + 1], outputBytes[yIndex * bytesPerRow + xIndex * 4 + 2], outputBytes[yIndex * bytesPerRow + xIndex * 4 + 3]);
-            }
-        }
-        [weakOutput unlockFramebufferAfterReading];
-    }];
-    
-    */
-    
-    //[imageInvertFilter addTarget:imageView];
-    //[imageInvertFilter useNextFrameForImageCapture];
-   // [grayImageFilter addTarget:imageView];
-    
-//    [opacityFilter useNextFrameForImageCapture];
-    
-    //[monoFilter useNextFrameForImageCapture];
+
     
     [grayImageFilter useNextFrameForImageCapture];
     [grayImageFilter addTarget:imageView];
     [stillImageSource processImage];
-    //UIImage* im = [imageInvertFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationUp];
+
     
     UIImage* im = [grayImageFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationUp];
-    
-    //UIImage* im = [monoFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationUp];
-    //UIImage* im = [opacityFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationUp];
-    
-    //UIImage* im = [opacityFilter imageByFilteringImage:grayIm];
-    
-   // NSLog(@"Size of blur image = width=%f and height = %f",im.size.width,im.size.height);
-   // NSLog(@"length of image leaving gaussian blur = %lu",[UIImagePNGRepresentation(im) length]);
-    
-    //postprocess gray image stripping 1,2,3 pixels from each RGBA keeping only the 4th pixel, and stuffing the 4th into an UByte array. This is the equivalent of cvtColor 8UC1
-    
     
     
     
@@ -429,7 +354,6 @@
     CGImageRef imageRef = im.CGImage;
     int height   = CGImageGetHeight(imageRef);
     int width   = CGImageGetWidth(imageRef);
-    //outputBytes = (GLubyte *)malloc(width * height * 4);
     
     int bitsPerComponent = (int)CGImageGetBitsPerComponent(imageRef);
     int bitsPerPixel = 32;
@@ -440,28 +364,23 @@
     if (self.ubyte_image_store != NULL) {
         free(self.ubyte_image_store);
     }
-    unsigned char *image_store = NULL; //calloc(im.size.width*im.size.height*4,1) ;
+    unsigned char *image_store = NULL;
     self.ubyte_image_store = calloc(im.size.width*im.size.height,1);
-    //memset(image_store,'\0',(im.size.width*im.size.height*4));
+
     
     
-    //CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
+
     CGColorSpaceRef colorSpaceRef = CGImageGetColorSpace(imageRef);
     
-    //CGBitmapInfo bitMapInfo = CGImageGetBitmapInfo(imageRef);
+
     CGBitmapInfo bitMapInfo = kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipFirst;
-//    CGBitmapInfo bitMapInfo  = kCGImageAlphaPremultipliedFirst ;
+
     CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
     
     
     NSLog(@"image width = %d, image height=%d, bitmapinfo = %d , colorspace = %@, bytesperrow = %d, bitpercomponent=%d, kCGImageAlphaNoneSkipLast =%d and  kCGBitmapByteOrder32Big %d and kCGBitmapByteOrder32Big = %d, and kCGImageAlphaNoneSkipFirst=%d and kCGImageAlphaPremultipliedFirst=%d, and kCGImageAlphaPremultipliedLast=%d, kCGImageAlphaOnly=%d,kCGImageAlphaNone=%d and scalefactor = 5f",width,height,bitMapInfo,colorSpaceRef,bytesPerRow,bitsPerComponent,kCGImageAlphaNoneSkipLast , kCGBitmapByteOrder32Big, kCGBitmapByteOrder32Big,kCGImageAlphaNoneSkipFirst,kCGImageAlphaPremultipliedFirst,kCGImageAlphaPremultipliedLast,kCGImageAlphaOnly,kCGImageAlphaNone,scaleFactor);
     CGContextRef context = CGBitmapContextCreate(NULL, width, height, bitsPerComponent, width*4, colorSpaceRef, bitMapInfo);
-    //CGContextRef context = CGBitmapContextCreate(NULL, width,
-    //                                             height,
-    //                                            bitsPerComponent,
-    //                                            0,
-    //                                           CGImageGetColorSpace(imageRef),
-    //                                           kCGBitmapByteOrderDefault | kCGImageAlphaPremultipliedFirst);
+
     
     CGColorSpaceRelease(colorSpaceRef);
     
@@ -470,10 +389,9 @@
     unsigned char *bitmapData = (unsigned char *)CGBitmapContextGetData(context);
     NSLog(@"Length of bitmapdata = %ld",strlen(bitmapData));
     
-    //CGImageRef tmpThumbImage = CGBitmapContextCreateImage(context);
+  
     CGContextRelease(context);
-    //im = [UIImage imageWithCGImage:tmpThumbImage];
-    //CGImageRelease(tmpThumbImage);
+
     
 
     NSData* pixelData = (__bridge NSData*) CGDataProviderCopyData(CGImageGetDataProvider(imageRef));
@@ -500,8 +418,7 @@
             if(linePointer[3])
             {
                 r = linePointer[2] * 255 / linePointer[3];
-//                g = linePointer[1] * 255 / linePointer[3];
-//                b = linePointer[0] * 255 / linePointer[3];
+
                 self.ubyte_image_store[y* width+x] = r ;
             }
         }
@@ -516,15 +433,13 @@
 }
 - (UIImage *) doBinarize:(UIImage *)sourceImage:(BOOL) flag
 {
-    //first off, try to grayscale the image using iOS core Image routine
-    //we did grayscaling already, and also smoothed the image with a GuassianBlur, now binarize it
-    //UIImage * grayScaledImg = [self grayImage:sourceImage];
+
     
     NSLog(@"length of image as received in doBinarize = %lu",[UIImagePNGRepresentation(sourceImage) length]);
     sourcePicture = [[GPUImagePicture alloc] initWithImage:sourceImage];
-    //GPUImageAdaptiveThresholdFilter *stillImageFilter = [[GPUImageAdaptiveThresholdFilter alloc] init];
+
     blurAdaptiveFilter.blurRadiusInPixels = blurRadius;
-    //    stillImageFilter.blurSize = 8.0;
+
     
     GPUImageView *imageView = (GPUImageView *)self.view;
     [blurAdaptiveFilter addTarget:imageView];//what's this , is this in the right place, but it works !
@@ -533,22 +448,19 @@
     [sourcePicture addTarget:blurAdaptiveFilter];
     [sourcePicture processImage];
     
-    //UIImage *retImage = [stillImageFilter imageFromCurrentlyProcessedOutput];
+
     UIImage *retImage = [blurAdaptiveFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationUp];
     if (flag) {
         return retImage ;
     }
     UIImage *negImage = [retImage negativeImage];
     
-   // [blurAdaptiveFilter imageByFilteringImage:negImage];
+ 
     sourcePicture = [[GPUImagePicture alloc] initWithImage:negImage];
     [sourcePicture addTarget:(GPUImageView *) self.view];
-   // [blurAdaptiveFilter useNextFrameForImageCapture];
-   // [sourcePicture addTarget:blurAdaptiveFilter];
+
     [sourcePicture processImage];
-   // retImage = [blurAdaptiveFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationUp];
-    
-//    [imageSource addTarget:blurAdaptiveFilter];
+
     NSLog(@"length of image leaving doBinarize = %lu",[UIImagePNGRepresentation(negImage) length]);
     
     return negImage;
@@ -586,21 +498,13 @@
     
     blurFilter.blurRadiusInPixels = gaussianBlurRadius; //initialized to 1
     blurFilter.blurPasses = 1;
-    //[blurFilter addTarget:stillImageSource];
+
     [stillImageSource addTarget:blurFilter];
     
-   // GPUImageBrightnessFilter *brightnessFilter = [[GPUImageBrightnessFilter alloc] init];
-    //[brightnessFilter setBrightness:-0.15f];
-    
-    //[blurFilter addTarget:brightnessFilter];
-    
-    //GPUImageView *imageView = (GPUImageView *)self.view;
-    
-    //[blurFilter addTarget:imageView];//what's this , is this in the right place, but it works !
+
     
     [blurFilter useNextFrameForImageCapture];
     [stillImageSource processImage];
-    //    return [brightnessFilter imageFromCurrentlyProcessedOutputWithOrientation:UIImageOrientationUp];
     UIImage* im = [blurFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationUp];
     NSLog(@"Size of blur image = width=%f and height = %f",im.size.width,im.size.height);
     NSLog(@"length of image leaving gaussian blur = %lu",[UIImagePNGRepresentation(im) length]);
@@ -616,15 +520,13 @@
     
     //finally binarize the grayscale, smoothed image
     UIImage *binarizedImage = [self doBinarize:blurImage:NO];
-    // we are doing negativeImage as part of binarized image
-    //UIImage *my_negativeImage = [binarizedImage negativeImage];
-    //UIImage *my_negativeImage = [binarizedImage negativeImage];
+
     self.gblurImage = binarizedImage;
 }
 
 - (void) processImage:(UIImage*) img {
     // gray scale the image
-    //UIImage *my_negativeImage ;
+
         UIImage * grayScaledImg = [self grayImage:img];
             
             
@@ -648,23 +550,7 @@
     
         NSLog(@"Length of blur image = %ld and image width and height = %f and %f",[UIImagePNGRepresentation(self.gblurImage) length],self.gblurImage.size.width,self.gblurImage.size.height);
             
-//    UIImage *my_negativeImage = [binarizedImage negativeImage];
-//    sourcePicture = [[GPUImagePicture alloc] initWithImage:my_negativeImage];
-    
-    
-    //and now resample the image applying brightness filter - commented because the image quality is not affected by the brightness filter...instead we process the binarized image directly
-    
-   // GPUImageBrightnessFilter *passthroughFilter = [[GPUImageBrightnessFilter alloc] init];
-//    [passthroughFilter forceProcessingAtSize:CGSizeMake(640.0, 480.0)];
-   // [passthroughFilter forceProcessingAtSize:binarizedImage.size];
-   // [sourcePicture addTarget:passthroughFilter];
-   // [passthroughFilter useNextFrameForImageCapture];
-    
 
-    
-    
-    
-    // gblurImage = binarizedImage ;
     //must add target view to show new image without filter
     [sourcePicture addTarget:(GPUImageView *) self.view];
     [sourcePicture processImage];
@@ -675,40 +561,11 @@
 {
     CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];
     
-    //NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    
-    //NSString *documentsDirectory = [paths objectAtIndex:0];
-    //NSString *filePath = [documentsDirectory stringByAppendingPathComponent:@"Lambeau-filtered1.png"];
-    
-    //UIImage * inputImage = [UIImage imageWithData: UIImagePNGRepresentation(self.capturedImage.fullImage )];
     
     NSLog(@"Length of captured image in Filterview= %ld and image width and height = %f and %f",[UIImagePNGRepresentation(self.capturedImage.fullImage) length],self.capturedImage.fullImage.size.width,self.capturedImage.fullImage.size.height);
     
-    //[self cascadeGPUFilters:self.capturedImage.fullImage :YES];
     [self chainGPUFilters:self.capturedImage.fullImage flag:YES];
-    UIImage* tImg =[self.ocv_wrapper getValidContours:self.ubyte_image_store:self.gblurImage.size.width:self.gblurImage.size.height];
-    self.gblurImage = tImg ; //self.gblurImage;
-    
-    // [self processImage:self.capturedImage.fullImage];
-    
-    //use the negativeImage we got after binarizing and notting and extract contours
-    
-    //UIImage* tImg = [self.ocv_wrapper getValidContours:self.gblurImage];
-    //self.gblurImage = tImg;
-    
-    //sepiaFilter = [[GPUImageTiltShiftFilter alloc] init];
-    //    sepiaFilter = [[GPUImageSobelEdgeDetectionFilter alloc] init];
-    
-    //GPUImageView *imageView = (GPUImageView *)self.view;
-    //    [sepiaFilter forceProcessingAtSize:imageView.sizeInPixels]; // This is now needed to make the filter run at the smaller output size
-    //[sepiaFilter forceProcessingAtSize:CGSizeMake(mainScreenFrame.size.width, mainScreenFrame.size.height-90)];
-    //[blurFilter forceProcessingAtSize:CGSizeMake(mainScreenFrame.size.width, mainScreenFrame.size.height-90)];
-    
-    
-    //[sourcePicture addTarget:blurFilter];
-    //[sepiaFilter addTarget:imageView];
-    
-    //[sourcePicture processImage];
+
 }
 
 
@@ -734,20 +591,18 @@
     dispatch_async(blurQueue, ^{
         blurRadius = blur ;
         blurAdaptiveFilter.blurRadiusInPixels = blur;
-        //[self processGrayImage:(UIImage*) self.grayImage ];
-        //[self cascadeGPUFilters:self.capturedImage.fullImage:NO];
+
         [self chainGPUFilters:self.capturedImage.fullImage flag:YES];
         //after processing and adjusting for slider position, gblurImage is reset
         [blurredImageCache setObject:self.gblurImage forKey:@(blur)];
-        //UIImage *result = [blurAdaptiveFilter imageByFilteringImage:self.gblurImage];
+
         [blurAmountsBeingRendered removeObject:@(blur)];
         semaphore = dispatch_semaphore_create(0);
         dispatch_async(dispatch_get_main_queue(), ^{
-          //  [self imageIsAvailableWithProperThreshold:blur];
+
             dispatch_semaphore_signal(semaphore);
         });
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-        //   [self imageIsAvailableWithBlur:blurFilter.blurRadiusInPixels];
     });
     
     
@@ -756,10 +611,7 @@
 }
 
 -(void)imageIsAvailableWithProperThreshold:(CGFloat)threshAmount {
-    /// CGFloat larger = smaller + BLUR_STEP;
-    
-    //UIImage *sharperImage = [self cachedImageWithBlurAmount:threshAmount];
-    //GPUImageView *imageView = (GPUImageView *)self.view;
+
     
     [blurAdaptiveFilter useNextFrameForImageCapture];
     [sourcePicture processImage];
@@ -787,7 +639,7 @@
             img = blurrier;
         }
         imageView.alpha = (blurRadius - smaller) / BLUR_STEP;
-      //  [blurFilter imageByFilteringImage:img];
+
     }
 }
 
@@ -796,17 +648,17 @@
 
 - (void)setupDisplayFiltering;
 {
-//    UIImage *inputImage = [UIImage imageNamed:@"WID-small.jpg"]; // The WID.jpg example is greater than 2048 pixels tall, so it fails on older devices
+
     UIImage * inputImage = [UIImage imageWithData: UIImagePNGRepresentation(self.capturedImage.fullImage )];
     CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];
     
     
     sourcePicture = [[GPUImagePicture alloc] initWithImage:inputImage smoothlyScaleOutput:YES];
     sepiaFilter = [[GPUImageTiltShiftFilter alloc] init];
-    //    sepiaFilter = [[GPUImageSobelEdgeDetectionFilter alloc] init];
+
     
     GPUImageView *imageView = (GPUImageView *)self.view;
-    //[sepiaFilter forceProcessingAtSize:imageView.sizeInPixels]; // This is now needed to make the filter run at the smaller output size
+
     [sepiaFilter forceProcessingAtSize:CGSizeMake(mainScreenFrame.size.width, mainScreenFrame.size.height-90)];
     [sourcePicture addTarget:sepiaFilter];
     [sepiaFilter addTarget:imageView];
@@ -820,7 +672,7 @@
     // Set up a manual image filtering chain
     NSURL *inputImageURL = [[NSBundle mainBundle] URLForResource:@"Lambeau" withExtension:@"jpg"];
     
-    //    GPUImagePicture *stillImageSource = [[GPUImagePicture alloc] initWithImage:inputImage];
+
     GPUImagePicture *stillImageSource = [[GPUImagePicture alloc] initWithURL:inputImageURL];
     
     GPUImageSepiaFilter *stillImageFilter = [[GPUImageSepiaFilter alloc] init];
@@ -851,10 +703,6 @@
     }
     
     // Do a simpler image filtering
-    //    GPUImageSketchFilter *stillImageFilter2 = [[GPUImageSketchFilter alloc] init];
-    //    GPUImageSobelEdgeDetectionFilter *stillImageFilter2 = [[GPUImageSobelEdgeDetectionFilter alloc] init];
-    //    GPUImageAmatorkaFilter *stillImageFilter2 = [[GPUImageAmatorkaFilter alloc] init];
-    //    GPUImageUnsharpMaskFilter *stillImageFilter2 = [[GPUImageUnsharpMaskFilter alloc] init];
     GPUImageSepiaFilter *stillImageFilter2 = [[GPUImageSepiaFilter alloc] init];
     NSLog(@"Second image filtering");
     UIImage *inputImage = [UIImage imageNamed:@"Lambeau.jpg"];
@@ -931,8 +779,7 @@
 - (void)dismissFilterViewController
 {
     [self.delegate dismissFilterViewController:self ];
-                                                
-    //filterViewController = nil;
+    
 }
 
 - (void)confirmButtonPressed
@@ -1011,11 +858,6 @@
 /*
 #pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
 */
 
 @end

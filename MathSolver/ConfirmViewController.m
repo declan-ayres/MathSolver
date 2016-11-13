@@ -2,7 +2,7 @@
 //  ConfirmViewController.m
 //  MathSolver
 //
-//  Created by B Ayres on 10/27/16.
+//  Created by D Ayres on 10/27/16.
 //  Copyright © 2016 PredawnLabs. All rights reserved.
 //
 //

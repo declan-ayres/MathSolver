@@ -2,7 +2,7 @@
 //  opencv_cpp.hpp
 //  MathSolver
 //
-//  Created by B Ayres on 10/30/16.
+//  Created by D Ayres on 10/30/16.
 //  Copyright © 2016 PredawnLabs. All rights reserved.
 //
 
@@ -32,7 +32,6 @@ using namespace cv;
 class contours_class {
 public:
     void extractContours(Mat& image,vector< vector<cv::Point> > contours_poly);
-    //vector<vector<cv::Point> > getContours(cv::Mat img) ;
     cv::Mat getContours(cv::Mat img) ;
 
 };

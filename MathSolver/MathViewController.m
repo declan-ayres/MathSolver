@@ -2,7 +2,7 @@
 //  ViewController.m
 //  MathSolver
 //
-//  Created by B Ayres on 10/27/16.
+//  Created by D Ayres on 10/27/16.
 //  Copyright © 2016 PredawnLabs. All rights reserved.
 //
 
@@ -20,15 +20,14 @@
 
 #pragma mark - View lifecycle
 
-//- (void)loadView
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
     self.view.backgroundColor = [UIColor blackColor];
     CGRect mainScreenFrame = [[UIScreen mainScreen] applicationFrame];
-    //GPUImageView *primaryView = [[GPUImageView alloc] initWithFrame:mainScreenFrame];
-    //self.view = primaryView;
+
     UIView* primaryView = self.view ;
     
     
@@ -222,9 +221,6 @@
     NSLog(@"Length of captured image = %ld and image width and height = %f and %f",[UIImagePNGRepresentation(capturedImage.fullImage) length],capturedImage.fullImage.size.width,capturedImage.fullImage.size.height);
     
     
-   // confirmController = [ConfirmViewController new];
-   // confirmController.capturedImage = capturedImage;
-   // confirmController.delegate = self;
     
     
     filterViewController = [FilterViewController new];
@@ -265,7 +261,6 @@
                                           }];
                      }];
     
-  //  [self processImage:[UIImage imageWithData:UIImagePNGRepresentation(capturedImage.fullImage)]];
     
     
 }

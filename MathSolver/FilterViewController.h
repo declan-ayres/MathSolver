@@ -2,7 +2,7 @@
 //  FilterViewController.h
 //  MathSolver
 //
-//  Created by B Ayres on 10/28/16.
+//  Created by D Ayres on 10/28/16.
 //  Copyright © 2016 PredawnLabs. All rights reserved.
 //
 

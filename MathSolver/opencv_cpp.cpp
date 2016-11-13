@@ -2,7 +2,7 @@
 //  opencv_cpp.cpp
 //  MathSolver
 //
-//  Created by B Ayres on 10/30/16.
+//  Created by D Ayres on 10/30/16.
 //  Copyright © 2016 PredawnLabs. All rights reserved.
 //
 
@@ -19,8 +19,6 @@ public:
     
 };
 
-//class contours_class {
-//public:
 void contours_class::extractContours(Mat& image,vector< vector<Point> > contours_poly){
     
     //Sort contorus by x value going from left to right
@@ -58,35 +56,20 @@ void contours_class::extractContours(Mat& image,vector< vector<Point> > contours
         image.copyTo(extractPic,mask);
         Mat resizedPic = extractPic(r);
         
-        //cv::Mat image=resizedPic.clone();
+       
         image=resizedPic.clone();
         
-        //Show image
-        //imshow("image",image);
-        //char ch  = waitKey(0);
-        //stringstream searchMask;
-        //searchMask<<i<<".jpg";
-        //imwrite(searchMask.str(),resizedPic);
+        
         
     }
 }
 
-//vector<vector<cv::Point> > contours_class::getContours(cv::Mat img)
+
 cv::Mat contours_class::getContours(cv::Mat img)
 {
-    //    cv::Mat img = cv::imread(filename, 0);
     
     
-    //Apply blur to smooth edges and use adapative thresholding
-    // but we have done these already to the image
-    /*
-        cv::Size size(3,3);
-        cv::GaussianBlur(img,img,size,0);
-        adaptiveThreshold(img, img,255,CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY,75,10);
-        cv::bitwise_not(img, img);
-    */
     
-
     cv::Mat img2 = img.clone();
     
     
@@ -122,13 +105,9 @@ cv::Mat contours_class::getContours(cv::Mat img)
         std::swap(box_size.width, box_size.height);
     cv::Mat cropped;
     
-    //cv::Mat rotated_32s;
-    //rotated.convertTo(rotated_32s, CV_8UC1);
-    //img.convertTo(floatimg, CV_32FC3);
     
     cv::getRectSubPix(rotated, box_size, box.center, cropped);
-    //cv::imshow("Cropped", cropped);
-    //imwrite("example5.jpg",cropped);
+    
     
     Mat cropped2=cropped.clone();
     cvtColor(cropped2,cropped2,CV_GRAY2RGB);
@@ -194,15 +173,6 @@ cv::Mat contours_class::getContours(cv::Mat img)
     
     
     
-     /* this is a stack overflow hack i included to test
-        for( size_t i = 0; i < validContours.size(); i++ )
-        {
-            const Point* p = &validContours[i][0];
-            int n = (int)validContours[i].size();
-            polylines(img, &p, &n, 1, true, Scalar(0,255,0), 3, CV_AA);
-        }
-      */
-
     //Display - We will diplay elsewhere in objc cocoa touch code
     
          Scalar color = Scalar(0,255,0);
@@ -214,25 +184,14 @@ cv::Mat contours_class::getContours(cv::Mat img)
         }
     
     
-    //imwrite("example6.jpg",cropped2);
-    //imshow("Contours",cropped2);
+    
     
     extractContours(cropped3,validContours);
-    //return validContours;
     return cropped3;
     
-   // cv::waitKey(0);
+
     
 }
-//};
 
 
 
-
-/*int main(void){
-    
-    char fileName[256];
-    cin>>fileName;
-    getContours(fileName);
-    
-}*/
