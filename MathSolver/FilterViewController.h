@@ -11,8 +11,6 @@
 #import "ConfirmViewController.h"
 #import "GPUImage.h"
 #import <Masonry/Masonry.h>
-#import "OpenCV_wrapper.h"
-
 
 @import AssetsLibrary;
 @import MessageUI;
@@ -76,7 +74,6 @@
 @property (nonatomic,strong) UIImage *gblurImage;
 @property (nonatomic,strong) UIImage *grayImage ;
 @property (nonatomic,strong) UIImage *binImage ;
-@property (nonatomic,strong) OpenCVWrapperClass *ocv_wrapper;
 @property (nonatomic, weak) id <FilterViewControllerDelegate> delegate;
 @property (nonatomic, strong) FastttCapturedImage *capturedImage;
 @property (nonatomic, assign) BOOL imagesReady;

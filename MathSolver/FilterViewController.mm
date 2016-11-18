@@ -8,7 +8,6 @@
 
 #import "FilterViewController.h"
 #import <CoreImage/CoreImage.h>
-#import "OpenCV_Wrapper.h"
 
 
 
@@ -79,7 +78,6 @@
     
     [primaryView addSubview:imageSlider];
     
-    self.ocv_wrapper = [[OpenCVWrapperClass alloc] init];
     
     
     [self updateView];
@@ -156,77 +154,6 @@
     
     
     
-    CGImageRef imageRef = im.CGImage;
-    int height   = (int) CGImageGetHeight(imageRef);
-    int width   = (int) CGImageGetWidth(imageRef);
-    
-    int bitsPerComponent = (int)CGImageGetBitsPerComponent(imageRef);
-    int bitsPerPixel = 32;
-    int bytesPerRow = bitsPerPixel/8*(int)width;
-    
-    float scaleFactor = [[UIScreen mainScreen] scale];
-    
-    if (self.ubyte_image_store != NULL) {
-        free(self.ubyte_image_store);
-    }
-    
-    self.ubyte_image_store = malloc((int)im.size.width*(int)im.size.height); //,1);
-    
-    if (strlen((char*)self.ubyte_image_store) == 0) {
-        NSLog(@"Couldn't allocate memory for ubyte_image_store ?!...was trying to allocate %f bytes of memory",im.size.width*im.size.height);
-    }
-    CGColorSpaceRef colorSpaceRef = CGImageGetColorSpace(imageRef);
-    
-    CGBitmapInfo bitMapInfo = kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipFirst;
-    
-    
-    
-    NSLog(@"image width = %d, image height=%d, bitmapinfo = %d , colorspace = %@, bytesperrow = %d, bitpercomponent=%d, kCGImageAlphaNoneSkipLast =%d and  kCGBitmapByteOrder32Big %d and kCGBitmapByteOrder32Big = %d, and kCGImageAlphaNoneSkipFirst=%d and kCGImageAlphaPremultipliedFirst=%d, and kCGImageAlphaPremultipliedLast=%d, kCGImageAlphaOnly=%d,kCGImageAlphaNone=%d and scalefactor = 5f",width,height,bitMapInfo,colorSpaceRef,bytesPerRow,bitsPerComponent,kCGImageAlphaNoneSkipLast , kCGBitmapByteOrder32Big, kCGBitmapByteOrder32Big,kCGImageAlphaNoneSkipFirst,kCGImageAlphaPremultipliedFirst,kCGImageAlphaPremultipliedLast,kCGImageAlphaOnly,kCGImageAlphaNone,scaleFactor);
-    CGContextRef context = CGBitmapContextCreate(NULL, width, height, bitsPerComponent, width*4, colorSpaceRef, bitMapInfo);
-    
-    CGColorSpaceRelease(colorSpaceRef);
-    
-    CGContextDrawImage(context, CGRectMake(0, 0, width, height),imageRef);
-    
-    unsigned char *bitmapData = (unsigned char *)CGBitmapContextGetData(context);
-    NSLog(@"Length of bitmapdata = %ld",strlen((char*)bitmapData));
-    
-    CGContextRelease(context);
-    
-    
-    NSData* pixelData = (__bridge NSData*) CGDataProviderCopyData(CGImageGetDataProvider(imageRef));
-    
-    unsigned char* pixelBytes = (unsigned char *) [pixelData bytes];
-    NSLog(@"Got pixelbytes and it is %ld long = ",strlen((char *)pixelBytes));
-    
-    NSLog(@"width=%ld, height: %ld", CGImageGetWidth(imageRef),
-          CGImageGetHeight(imageRef) );
-    
-    
-    
-    
-    for(int y = 0; y < height; y++)
-    {
-        // get a pointer to the start of this scan line
-        unsigned char *linePointer = &pixelBytes[y * width * 4];
-        
-        // step through the pixels one by one...
-        for(int x = 0; x < width; x++)
-        {
-            //copy out every 4th pixel to ubyte_image_store
-            int r, g, b;
-            if(linePointer[3])
-            {
-                r = linePointer[2] * 255 / linePointer[3];
-                
-                self.ubyte_image_store[y* width+x] = r ;
-            }
-        }
-    }
-    
-    
-    
-    
     self.gblurImage = im;
     self.grayImage = im;
     return im;
@@ -235,126 +162,6 @@
 }
 
 
-
-- (UIImage*) cascadeGPUFilters:(UIImage*) sourceImage:(BOOL) flag
-{
-    NSLog(@"length of image entering gaussian blur = %lu",[UIImagePNGRepresentation(sourceImage) length]);
-    
-    GPUImageView *imageView = (GPUImageView *)self.view;
-    
-    
-    
-    
-    // pass the image through a brightness filter to darken a bit and a gaussianBlur filter to blur
-    GPUImagePicture *stillImageSource = [[GPUImagePicture alloc] initWithImage:sourceImage];
-    
-    
-    blurFilter.blurRadiusInPixels = gaussianBlurRadius; //initialized to 1
-    blurFilter.blurPasses = 1;
-    
-    
-    blurAdaptiveFilter.blurRadiusInPixels = blurRadius;
-    
-    
-    
-    [stillImageSource addTarget:blurFilter];
-    
-    [blurFilter addTarget:blurAdaptiveFilter];
-    [blurAdaptiveFilter addTarget:imageInvertFilter];
-    [imageInvertFilter addTarget:grayImageFilter];
-    
-    
-    
-    [grayImageFilter useNextFrameForImageCapture];
-    [grayImageFilter addTarget:imageView];
-    [stillImageSource processImage];
-    
-    
-    UIImage* im = [grayImageFilter imageFromCurrentFramebufferWithOrientation:UIImageOrientationUp];
-    
-    
-    
-    
-    CGImageRef imageRef = im.CGImage;
-    int height   = CGImageGetHeight(imageRef);
-    int width   = CGImageGetWidth(imageRef);
-    
-    int bitsPerComponent = (int)CGImageGetBitsPerComponent(imageRef);
-    int bitsPerPixel = 32;
-    int bytesPerRow = bitsPerPixel/8*(int)width;
-    
-    float scaleFactor = [[UIScreen mainScreen] scale];
-    
-    if (self.ubyte_image_store != NULL) {
-        free(self.ubyte_image_store);
-    }
-    unsigned char *image_store = NULL;
-    self.ubyte_image_store = calloc(im.size.width*im.size.height,1);
-    
-    
-    
-    
-    CGColorSpaceRef colorSpaceRef = CGImageGetColorSpace(imageRef);
-    
-    
-    CGBitmapInfo bitMapInfo = kCGBitmapByteOrder32Big | kCGImageAlphaNoneSkipFirst;
-    
-    CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
-    
-    
-    NSLog(@"image width = %d, image height=%d, bitmapinfo = %d , colorspace = %@, bytesperrow = %d, bitpercomponent=%d, kCGImageAlphaNoneSkipLast =%d and  kCGBitmapByteOrder32Big %d and kCGBitmapByteOrder32Big = %d, and kCGImageAlphaNoneSkipFirst=%d and kCGImageAlphaPremultipliedFirst=%d, and kCGImageAlphaPremultipliedLast=%d, kCGImageAlphaOnly=%d,kCGImageAlphaNone=%d and scalefactor = 5f",width,height,bitMapInfo,colorSpaceRef,bytesPerRow,bitsPerComponent,kCGImageAlphaNoneSkipLast , kCGBitmapByteOrder32Big, kCGBitmapByteOrder32Big,kCGImageAlphaNoneSkipFirst,kCGImageAlphaPremultipliedFirst,kCGImageAlphaPremultipliedLast,kCGImageAlphaOnly,kCGImageAlphaNone,scaleFactor);
-    CGContextRef context = CGBitmapContextCreate(NULL, width, height, bitsPerComponent, width*4, colorSpaceRef, bitMapInfo);
-    
-    
-    CGColorSpaceRelease(colorSpaceRef);
-    
-    CGContextDrawImage(context, CGRectMake(0, 0, width, height),imageRef);
-    
-    unsigned char *bitmapData = (unsigned char *)CGBitmapContextGetData(context);
-    NSLog(@"Length of bitmapdata = %ld",strlen(bitmapData));
-    
-    
-    CGContextRelease(context);
-    
-    
-    
-    NSData* pixelData = (__bridge NSData*) CGDataProviderCopyData(CGImageGetDataProvider(imageRef));
-    
-    unsigned char* pixelBytes = (unsigned char *) [pixelData bytes];
-    NSLog(@"Got pixelbytes and it is %ld long = ",strlen((char *)pixelBytes));
-    
-    NSLog(@"width=%ld, height: %ld", CGImageGetWidth(imageRef),
-          CGImageGetHeight(imageRef) );
-    
-    
-    
-    
-    for(int y = 0; y < height; y++)
-    {
-        // get a pointer to the start of this scan line
-        unsigned char *linePointer = &pixelBytes[y * width * 4];
-        
-        // step through the pixels one by one...
-        for(int x = 0; x < width; x++)
-        {
-            //copy out every 4th pixel to ubyte_image_store
-            int r, g, b;
-            if(linePointer[3])
-            {
-                r = linePointer[2] * 255 / linePointer[3];
-                
-                self.ubyte_image_store[y* width+x] = r ;
-            }
-        }
-    }
-    
-    
-    
-    
-    self.gblurImage = im;
-    self.grayImage = im;
-    return im;
-}
 
 - (UIImage *) grayImage :(UIImage *)inputImage
 {
@@ -422,7 +229,7 @@
 }
 
 
-
+//Adlai Holler , Stack overflow --> http://stackoverflow.com/questions/18804668/gpuimage-animated-gaussian-blur-filter
 -(void)asyncGenerateImageWithBlurAmount:(CGFloat)blur {
     // This image is already available.
     if([blurredImageCache objectForKey:@(blur)]) {
@@ -511,6 +318,8 @@
 }
 
 
+//  Created by Laura Skelton on 2/9/15.
+//  Copyright (c) 2015 IFTTT. All rights reserved.
 
 - (void)emailPhoto:(UIImage*) img
 {

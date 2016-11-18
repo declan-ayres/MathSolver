@@ -19,8 +19,6 @@
 		0D05FEFC1DC2EF6C00F8E07D /* ConfirmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0D05FEFB1DC2EF6C00F8E07D /* ConfirmViewController.m */; };
 		0D05FEFE1DC3148900F8E07D /* WID-small.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 0D05FEFD1DC3148900F8E07D /* WID-small.jpg */; };
 		0D05FF011DC3A9E600F8E07D /* FilterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D05FF001DC3A9E600F8E07D /* FilterViewController.mm */; };
-		0D5CF2401DC5A44B00618FD3 /* OpenCV_Wrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0D5CF23F1DC5A44B00618FD3 /* OpenCV_Wrapper.mm */; };
-		0D5CF2431DC6686B00618FD3 /* opencv_cpp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0D5CF2411DC6686B00618FD3 /* opencv_cpp.cpp */; };
 		DA195A20571CEADA2BA01906 /* libPods-MathSolver.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F40FE1DCE5279CD36C673687 /* libPods-MathSolver.a */; };
 /* End PBXBuildFile section */
 
@@ -64,10 +62,6 @@
 		0D05FEFD1DC3148900F8E07D /* WID-small.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = "WID-small.jpg"; sourceTree = "<group>"; };
 		0D05FEFF1DC3A9E600F8E07D /* FilterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterViewController.h; sourceTree = "<group>"; };
 		0D05FF001DC3A9E600F8E07D /* FilterViewController.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.c.objc; fileEncoding = 4; path = FilterViewController.mm; sourceTree = "<group>"; };
-		0D5CF23F1DC5A44B00618FD3 /* OpenCV_Wrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = OpenCV_Wrapper.mm; sourceTree = "<group>"; };
-		0D5CF2411DC6686B00618FD3 /* opencv_cpp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = opencv_cpp.cpp; sourceTree = "<group>"; };
-		0D5CF2421DC6686B00618FD3 /* opencv_cpp.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = opencv_cpp.hpp; sourceTree = "<group>"; };
-		0D5CF2441DC6816900618FD3 /* OpenCV_wrapper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenCV_wrapper.h; sourceTree = "<group>"; };
 		42669EF0CD259360FAEEE313 /* Pods-MathSolver.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MathSolver.release.xcconfig"; path = "Pods/Target Support Files/Pods-MathSolver/Pods-MathSolver.release.xcconfig"; sourceTree = "<group>"; };
 		63FEF05B3032D9B8514EF7AE /* Pods-MathSolver.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MathSolver.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MathSolver/Pods-MathSolver.debug.xcconfig"; sourceTree = "<group>"; };
 		F40FE1DCE5279CD36C673687 /* libPods-MathSolver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MathSolver.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -135,10 +129,6 @@
 				0D05FEFD1DC3148900F8E07D /* WID-small.jpg */,
 				0D05FEC71DC2CCDB00F8E07D /* AppDelegate.h */,
 				0D05FEC81DC2CCDB00F8E07D /* AppDelegate.m */,
-				0D5CF23F1DC5A44B00618FD3 /* OpenCV_Wrapper.mm */,
-				0D5CF2441DC6816900618FD3 /* OpenCV_wrapper.h */,
-				0D5CF2411DC6686B00618FD3 /* opencv_cpp.cpp */,
-				0D5CF2421DC6686B00618FD3 /* opencv_cpp.hpp */,
 				0D05FEFF1DC3A9E600F8E07D /* FilterViewController.h */,
 				0D05FF001DC3A9E600F8E07D /* FilterViewController.mm */,
 				0D05FECA1DC2CCDB00F8E07D /* MathViewController.h */,
@@ -376,11 +366,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0D5CF2401DC5A44B00618FD3 /* OpenCV_Wrapper.mm in Sources */,
 				0D05FED21DC2CCDE00F8E07D /* MathSolver.xcdatamodeld in Sources */,
 				0D05FEFC1DC2EF6C00F8E07D /* ConfirmViewController.m in Sources */,
 				0D05FECC1DC2CCDC00F8E07D /* MathViewController.m in Sources */,
-				0D5CF2431DC6686B00618FD3 /* opencv_cpp.cpp in Sources */,
 				0D05FEC91DC2CCDB00F8E07D /* AppDelegate.m in Sources */,
 				0D05FF011DC3A9E600F8E07D /* FilterViewController.mm in Sources */,
 				0D05FEC61DC2CCDB00F8E07D /* main.m in Sources */,
