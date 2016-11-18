@@ -2,8 +2,7 @@
 //  MathSolverUITests.m
 //  MathSolverUITests
 //
-//  Created by B Ayres on 10/27/16.
-//  Copyright © 2016 PredawnLabs. All rights reserved.
+//  Created by D Ayres on 10/27/16.
 //
 
 #import <XCTest/XCTest.h>

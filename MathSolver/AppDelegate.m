@@ -3,7 +3,6 @@
 //  MathSolver
 //
 //  Created by D Ayres on 10/27/16.
-//  Copyright © 2016 PredawnLabs. All rights reserved.
 //
 
 #import "AppDelegate.h"

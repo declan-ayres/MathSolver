@@ -3,7 +3,6 @@
 //  MathSolver
 //
 //  Created by D Ayres on 10/28/16.
-//  Copyright © 2016 PredawnLabs. All rights reserved.
 // #Attributions to GPU Image Filter by Brad Larson Link:https://github.com/BradLarson/GPUImage2
 
 #import "FilterViewController.h"
