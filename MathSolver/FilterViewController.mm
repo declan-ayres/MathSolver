@@ -65,7 +65,7 @@
     gaussianBlurRadius = 1.0;
     blurRadius = 8.0;
     
-    
+    //initialize the slider
     imageSlider = [[UISlider alloc] initWithFrame:CGRectMake(25.0, mainScreenFrame.size.height - 80.0, mainScreenFrame.size.width - 50.0, 40.0)];
     [imageSlider addTarget:self action:@selector(sliderDidMove:) forControlEvents:UIControlEventValueChanged];
     
